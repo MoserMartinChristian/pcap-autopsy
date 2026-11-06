@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="/*CSP*/">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="PCAP Autopsy – drop a packet capture and get an evidence-based, plain-language answer to “Is it the network?”. Runs offline in the browser.">
+<meta name="color-scheme" content="dark light">
+<title>PCAP Autopsy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23101419'/%3E%3Cpath d='M3 18h6l2.5-7 4 13 3-9 2 3H29' fill='none' stroke='%2333d6c4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+/*INLINE:styles.css*/
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Skip to results</a>
+<header class="topbar">
+  <a class="brand" href="#" id="brand" aria-label="PCAP Autopsy – start">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M3 18h6l2.5-7 4 13 3-9 2 3H29"/></svg>
+    <span class="brand-text"><span class="brand-name">PCAP Autopsy</span><span class="brand-tag" data-i18n="tagline">Is it the network? Evidence-based answers from a packet capture.</span></span>
+  </a>
+  <div class="top-actions">
+    <button type="button" class="local-badge" id="btn-local" aria-expanded="false" aria-controls="local-pop">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.4-3 7.9-7 9-4-1.1-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span data-i18n="localShort">100 % local</span>
+    </button>
+    <div class="seg" role="group" aria-label="Language / Sprache">
+      <button type="button" id="lang-en" aria-pressed="true" lang="en">EN</button>
+      <button type="button" id="lang-de" aria-pressed="false" lang="de">DE</button>
+    </div>
+    <button type="button" class="icon-btn" id="btn-theme" data-i18n-aria="theme" aria-label="Toggle dark / light mode">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+    </button>
+  </div>
+  <div class="local-pop" id="local-pop" hidden>
+    <strong data-i18n="local">Runs 100 % in your browser. Nothing is uploaded.</strong>
+    <p data-i18n="localHelp"></p>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <!-- intake -->
+  <section id="view-intake" class="view intake" aria-labelledby="h-intake">
+    <h1 id="h-intake" class="sr-only">PCAP Autopsy</h1>
+    <div class="dropzone" id="dropzone">
+      <div class="dz-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <svg class="dz-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="8" width="44" height="48" rx="6"/><path d="M18 34h7l3-8 5 15 4-11 2 4h7"/><path d="M22 18h20M22 24h12"/></svg>
+      <p class="dz-title" data-i18n="drop">Drop a capture file here</p>
+      <p class="dz-sub" data-i18n="dropSub"></p>
+      <label class="btn primary" for="file-input"><span data-i18n="choose">Choose file</span></label>
+      <input type="file" id="file-input" accept=".pcap,.pcapng,.cap,.dmp,application/vnd.tcpdump.pcap" class="sr-only">
+      <p class="dz-limit" id="dz-limit"></p>
+    </div>
+    <div class="privacy-strip">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.4-3 7.9-7 9-4-1.1-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+      <div><strong data-i18n="local">Runs 100 % in your browser. Nothing is uploaded.</strong> <span data-i18n="localHelp"></span></div>
+    </div>
+    <h2 class="demo-h" data-i18n="orDemo">or open a synthetic demo capture:</h2>
+    <div class="demos" id="demos"></div>
+    <p class="demo-note" data-i18n="demoNote">Synthetic capture generated in your browser. No real traffic.</p>
+  </section>
+
+  <!-- progress -->
+  <section id="view-busy" class="view busy" hidden aria-live="polite">
+    <div class="busy-card">
+      <div class="tag-file" id="busy-file"></div>
+      <svg class="ekg" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 H120 l10 -22 14 40 12 -30 8 12 H260 l10 -22 14 40 12 -30 8 12 H400"/></svg>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="busy-bar" aria-valuenow="0"><span id="busy-fill"></span></div>
+      <p class="busy-text" id="busy-text"></p>
+      <button type="button" class="btn" id="btn-cancel" data-i18n="cancel">Cancel</button>
+    </div>
+  </section>
+
+  <!-- error -->
+  <section id="view-error" class="view" hidden>
+    <div class="error-card" role="alert">
+      <h2 data-i18n="errTitle">This file cannot be analysed</h2>
+      <p id="error-text"></p>
+      <button type="button" class="btn primary" id="btn-error-back" data-i18n="newFile">New file</button>
+    </div>
+  </section>
+
+  <!-- results -->
+  <section id="view-result" class="view result" hidden>
+    <div class="case-head">
+      <div class="tag-file" id="res-file"></div>
+      <div class="case-actions">
+        <button type="button" class="btn" id="btn-new"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="newFile">New file</span></button>
+      </div>
+    </div>
+    <div class="verdict" id="verdict" tabindex="-1" aria-live="polite"></div>
+    <nav class="tabs" role="tablist" id="tabs" aria-label="Views">
+      <button role="tab" id="tab-findings" aria-controls="panel-findings" aria-selected="true" data-tab="findings"><span data-i18n="findings">Findings</span><span class="count" id="cnt-findings"></span></button>
+      <button role="tab" id="tab-conns" aria-controls="panel-conns" aria-selected="false" tabindex="-1" data-tab="conns"><span data-i18n="connections">Connections</span><span class="count" id="cnt-conns"></span></button>
+      <button role="tab" id="tab-packets" aria-controls="panel-packets" aria-selected="false" tabindex="-1" data-tab="packets"><span data-i18n="packetsTab">Packets</span></button>
+      <button role="tab" id="tab-charts" aria-controls="panel-charts" aria-selected="false" tabindex="-1" data-tab="charts"><span data-i18n="charts">Charts</span></button>
+      <button role="tab" id="tab-report" aria-controls="panel-report" aria-selected="false" tabindex="-1" data-tab="report"><span data-i18n="report">Report</span></button>
+      <button role="tab" id="tab-thresholds" aria-controls="panel-thresholds" aria-selected="false" tabindex="-1" data-tab="thresholds"><span data-i18n="thresholds">Thresholds</span></button>
+    </nav>
+    <div role="tabpanel" id="panel-findings" aria-labelledby="tab-findings" class="panel"></div>
+    <div role="tabpanel" id="panel-conns" aria-labelledby="tab-conns" class="panel" hidden></div>
+    <div role="tabpanel" id="panel-packets" aria-labelledby="tab-packets" class="panel" hidden>
+      <div class="pk-bar">
+        <div class="pk-filter" id="pk-filter"></div>
+        <div class="pk-legend" aria-hidden="true"><span class="lg bad">■</span> <span data-i18n="legendRetr">retransmission</span> <span class="lg warn">▲</span> Dup ACK / OOO <span class="lg key">●</span> <span data-i18n="marks">Markers</span></div>
+      </div>
+      <div class="pk-head" aria-hidden="true"><span data-i18n="no">No.</span><span data-i18n="time">Time</span><span data-i18n="src">Source</span><span data-i18n="dst">Destination</span><span data-i18n="proto">Proto</span><span data-i18n="len">Len</span><span data-i18n="info">Info</span></div>
+      <div class="pk-list" id="pk-list" tabindex="0" role="grid" aria-rowcount="0" aria-label="Packets"><div class="pk-spacer" id="pk-spacer"></div></div>
+    </div>
+    <div role="tabpanel" id="panel-charts" aria-labelledby="tab-charts" class="panel" hidden></div>
+    <div role="tabpanel" id="panel-report" aria-labelledby="tab-report" class="panel" hidden></div>
+    <div role="tabpanel" id="panel-thresholds" aria-labelledby="tab-thresholds" class="panel" hidden></div>
+  </section>
+</main>
+<div class="drag-veil" id="drag-veil" aria-hidden="true"><div><svg viewBox="0 0 64 64"><rect x="10" y="8" width="44" height="48" rx="6"/><path d="M18 34h7l3-8 5 15 4-11 2 4h7"/></svg><span data-i18n="drop">Drop a capture file here</span></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<footer class="foot">
+  <span>PCAP Autopsy <span id="ver"></span> · MIT</span>
+  <span data-i18n="local">Runs 100 % in your browser. Nothing is uploaded.</span>
+</footer>
+<script id="pa-core">
+/*INLINE_CORE*/
+</script>
+<script type="text/plain" id="pa-worker">
+/*INLINE:worker.js*/
+</script>
+<script id="pa-app">
+/*INLINE_APP*/
+</script>
+</body>
+</html>

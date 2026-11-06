@@ -1,0 +1,16 @@
+{
+  "name": "pcap-autopsy",
+  "version": "1.0.0",
+  "description": "Drop a packet capture, get an evidence-based plain-language answer to \"is it the network?\". Single offline HTML file.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test test/core.test.js",
+    "test:e2e": "node build.js && node test/e2e.js",
+    "test:tshark": "node scripts/compare-tshark.js",
+    "test:all": "npm test && npm run test:e2e",
+    "demo": "node build.js && node scripts/record-demo.js",
+    "measure": "node scripts/measure-size.js"
+  }
+}

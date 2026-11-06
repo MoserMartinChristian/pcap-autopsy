@@ -1,0 +1,56 @@
+PCAP Autopsy – browser end-to-end test
+2026-11-05T16:34:31.732Z  Chromium 153.0.8010.12  file://index.html
+
+PASS CSP present with connect-src none
+PASS fetch() to the internet is blocked by CSP
+PASS demo healthy → clean
+PASS demo syn-timeout → network
+PASS demo rst-on-syn → server
+PASS demo loss → network
+PASS demo zero-window → client
+PASS demo small-window → client
+PASS demo server-delay → server
+PASS demo app-pause → server
+PASS demo delack-nagle → client
+PASS demo bufferbloat → network
+PASS demo pmtud-blackhole → network
+PASS demo icmp-ptb → network
+PASS demo rst-middlebox → network
+PASS demo dns → server
+PASS demo tls → server
+PASS demo icmp-unreach → network
+PASS demo mixed → mixed
+PASS demo trap-offload → clean
+PASS demo trap-caploss → clean
+PASS demo trap-snaplen → clean
+PASS demo trap-midstream → clean
+PASS demo trap-keepalive → clean
+PASS demo trap-short → inconclusive
+PASS evidence button jumps to packet #179  (highlighted 179)
+PASS jumped packet is visible in the list
+PASS virtual packet list renders rows after scrolling  (32 rows)
+PASS connection table lists connections  (12)
+PASS four charts drawn  (2794/1460/4231/1239)
+PASS key moments listed  (3)
+PASS chart zoom and reset without errors
+PASS ticket text present
+PASS Markdown export downloads  (demo-loss-autopsy.md)
+PASS HTML export downloads with own CSP  (demo-loss-autopsy.html)
+PASS anonymised exports contain none of the 5 real IPs
+PASS exported HTML report opens without errors
+PASS threshold table lists all thresholds  (34 rows)
+PASS arrow keys move between tabs  (tab-report)
+PASS German UI switches verdict text
+PASS theme toggle switches dark/light  (dark→light)
+PASS file picker loads pcapng (QinQ)
+PASS drag & drop analyses the dropped file  (dropped.pcap · 66.9 KiB server)
+PASS repeated findings are grouped (69 findings, 11 cards)  ({"cards":11,"total":69,"folds":2})
+PASS link to a folded finding opens its group
+PASS non-capture file shows clear message  (This is not a pcap or pcapng file (unknown file signature). Export the)
+PASS truncated file is analysed with a parse warning
+PASS cancel stops the analysis and returns to the start
+PASS no horizontal scroll on a 390 px phone  (0 px)
+PASS no console errors or warnings
+PASS no request left the browser (only file:, blob:, data:)
+
+51/51 passed
